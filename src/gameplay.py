@@ -4,8 +4,12 @@ from src.utils import inside_board, print_board, neighbors
 
 BOARD_SIZE = 10
 
-
 def read_ships(file_path):
+    """
+    Reads ship coordinates from a CSV file
+    Returns:
+        List[List[Tuple[int, int]]]: List of ships, each ship is a list of (x, y) coordinates
+    """
     ships = []
     with open(file_path, newline="") as f:
         reader = csv.reader(f)
@@ -22,18 +26,28 @@ def read_ships(file_path):
             ships.append(current_ship)
     return ships
 
-
 def create_empty_board():
+    """
+    Creates an empty game board
+    Returns:
+        List[List[str]]: 2D list representing the board filled with '-'
+    """
     return [["-" for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
 
-
 def mark_ship_on_board(board, ships):
+    """
+    Places ships on the board by marking their positions with 's'
+    """
     for ship in ships:
         for x, y in ship:
             board[y][x] = "s"
 
-
 def get_player_move(board):
+    """
+    Prompts the player to enter a valid move (coordinates)
+    Returns:
+        Valid (x, y) coordinates entered by the player
+    """
     while True:
         raw = input("Enter your shot (x y): ")
         try:
@@ -48,8 +62,12 @@ def get_player_move(board):
         except:
             print("Invalid input, try again")
 
-
 def get_bot_move(board):
+    """
+    Randomly selects a valid move for the bot
+    Returns:
+        Valid (x, y) coordinates for the bot's move
+    """
     available_coords = []
     for column in range(BOARD_SIZE):
         for row in range(BOARD_SIZE):
@@ -57,22 +75,32 @@ def get_bot_move(board):
                 available_coords.append((column, row))
     return random.choice(available_coords)
 
-
 def is_ship_destroyed(ship, hits):
+    """
+    Checks if a ship is completely destroyed
+    Returns:
+        bool: True if the ship is destroyed, False otherwise
+    """
     for cell in ship:
         if cell not in hits:
             return False
     return True
 
-
 def mark_misses_around_ship(board, ship):
+    """
+    Marks '.' around a destroyed ship to indicate missed cells
+    """
     for x, y in ship:
         for nx, ny in neighbors(x, y):
             if inside_board(nx, ny) and board[ny][nx] == "-":
                 board[ny][nx] = "."
 
-
 def apply_move(board, ships, hits, destroyed_ships, x, y):
+    """
+    Applies a move to the board, updating hits and checking for destroyed ships
+    Returns:
+        str: "hit", "miss", or "destroyed" depending on the result of the move
+    """
     hits.add((x, y))
 
     for ship_id, ship in enumerate(ships):
@@ -91,10 +119,18 @@ def apply_move(board, ships, hits, destroyed_ships, x, y):
 
 
 def all_ships_sunk(destroyed_ships, ships):
+    """
+    Checks if all ships are destroyed
+    Returns:
+        bool: True if all ships are destroyed, False otherwise
+    """
     return len(destroyed_ships) == len(ships)
 
 
 def save_game_state(turn, player_move, bot_move, player_board, bot_board, file_path="data/game_state.csv"):
+    """
+    Saves the current game state to a CSV file
+    """
     with open(file_path, "a", newline="") as f:
         writer = csv.writer(f)
         writer.writerow([turn, player_move, bot_move])
@@ -110,6 +146,9 @@ bot_targets = []
 bot_shots_taken = set()
 
 def start_game(player_ships, bot_ships):
+    """
+    Starts the main game loop for Battleship, handling turns for player and bot
+    """
     player_board = create_empty_board()
     bot_board = create_empty_board()
 
