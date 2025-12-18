@@ -4,6 +4,19 @@ from src.utils import inside_board, neighbors
 SHIP_SIZES = [4,3,3,2,2,2,1,1,1,1]
 
 def read_player_ships():
+    """
+    Prompts the player to enter the coordinates for all ships, validates them, 
+    and saves the ship positions to a CSV file
+
+    Rules enforced:
+    - Ships must have the correct size
+    - Ships must stay inside the board
+    - Ships must be placed straight (horizontal or vertical)
+    - Ships must not touch each other, even diagonally
+
+     Returns:
+        List[List[Tuple[int, int]]]: A list of ships, where each ship is a list of (x, y) tuples representing its coordinates
+    """
     ships = []
     occupied = set()
 

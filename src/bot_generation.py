@@ -5,6 +5,17 @@ from src.utils import inside_board, neighbors
 SHIP_SIZES = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
 
 def generate_bot_ships():
+    """
+    Randomly generates positions for all bot ships, ensuring that:
+    - Ships do not overlap
+    - Ships do not touch each other, even diagonally
+    - Ships stay within the board boundaries
+
+    Saves the generated ship coordinates to "data/bot_ships.csv"
+
+    Returns:
+        List[List[Tuple[int, int]]]: A list of ships, where each ship is a list of (x, y) tuples representing its coordinates.
+    """
     ships = []
     occupied = set()
 
